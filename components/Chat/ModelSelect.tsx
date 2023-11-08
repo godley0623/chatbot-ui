@@ -35,7 +35,6 @@ export const ModelSelect = () => {
         <select
           className="w-full bg-transparent p-2"
           placeholder={t('Select a model') || ''}
-          value={selectedConversation?.model?.id || defaultModelId}
           onChange={handleChange}
         >
           {models.map((model) => (
@@ -44,7 +43,7 @@ export const ModelSelect = () => {
               value={model.id}
               className="dark:bg-[#343541] dark:text-white"
             >
-              {model.id === defaultModelId
+              {model.id !== defaultModelId
                 ? `Default (${model.name})`
                 : model.name}
             </option>
