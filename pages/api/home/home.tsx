@@ -31,10 +31,10 @@ import { FolderInterface, FolderType } from '@/types/folder';
 import { OpenAIModelID, OpenAIModels, fallbackModelID } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 
-import { Chat } from '@/components/Chat/Chat';
-import { Chatbar } from '@/components/Chatbar/Chatbar';
-import { Navbar } from '@/components/Mobile/Navbar';
-import Promptbar from '@/components/Promptbar';
+import { Chat } from '@/Components/Chat/Chat';
+import { Chatbar } from '@/Components/Chatbar/Chatbar';
+import { Navbar } from '@/Components/Mobile/Navbar';
+import Promptbar from '@/Components/Promptbar';
 
 import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';

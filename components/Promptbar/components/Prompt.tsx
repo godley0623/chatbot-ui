@@ -14,7 +14,7 @@ import {
 
 import { Prompt } from '@/types/prompt';
 
-import SidebarActionButton from '@/components/Buttons/SidebarActionButton';
+import SidebarActionButton from '@/Components/Buttons/SidebarActionButton';
 
 import PromptbarContext from '../PromptBar.context';
 import { PromptModal } from './PromptModal';
