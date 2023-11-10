@@ -1,3 +1,4 @@
+import { ProcessPayment } from '../Payments/lightningPayments';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -70,6 +71,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
+      await ProcessPayment();
+
       if (selectedConversation) {
         let updatedConversation: Conversation;
         if (deleteCount) {
