@@ -6,7 +6,7 @@ import { PluginID, PluginKey } from '@/types/plugin';
 
 import HomeContext from '@/pages/api/home/home.context';
 
-import { SidebarButton } from '@/components/Sidebar/SidebarButton';
+import { SidebarButton } from '@/Components/Sidebar/SidebarButton';
 
 import ChatbarContext from '../Chatbar.context';
 
