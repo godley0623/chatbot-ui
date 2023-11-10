@@ -1,3 +1,4 @@
+import { ProcessPayment } from '../Payments/Payments';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -25,13 +26,12 @@ import { Plugin } from '@/types/plugin';
 
 import HomeContext from '@/pages/api/home/home.context';
 
-import Spinner from '../Spinner';
+import Spinner from '@/components/Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
-import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 
 interface Props {
@@ -70,6 +70,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
+    //Call payments function to activate payment
+    await ProcessPayment();
+    console.log('ProcessPayment completed')
+
       if (selectedConversation) {
         let updatedConversation: Conversation;
         if (deleteCount) {
