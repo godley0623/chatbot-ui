@@ -1,4 +1,4 @@
-import { ProcessPayment } from '../Payments/lightningPayments';
+import { ProcessPayment } from '../Payments/LightningPayments';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
