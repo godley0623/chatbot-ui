@@ -18,8 +18,8 @@ import { Conversation } from '@/types/chat';
 
 import HomeContext from '@/pages/api/home/home.context';
 
-import SidebarActionButton from '@/Components/Buttons/SidebarActionButton';
-import ChatbarContext from '@/Components/Chatbar/Chatbar.context';
+import SidebarActionButton from '@/components/Buttons/SidebarActionButton';
+import ChatbarContext from '@/components/Chatbar/Chatbar.context';
 
 interface Props {
   conversation: Conversation;

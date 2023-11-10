@@ -4,7 +4,7 @@ import { FolderInterface } from '@/types/folder';
 
 import HomeContext from '@/pages/api/home/home.context';
 
-import Folder from '@/Components/Folder';
+import Folder from '@/components/Folder';
 
 import { ConversationComponent } from './Conversation';
 
