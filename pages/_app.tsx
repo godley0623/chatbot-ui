@@ -1,5 +1,6 @@
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { PopupStateProvider } from '@/components/Popup/PopupContext';
 
 import { appWithTranslation } from 'next-i18next';
 import type { AppProps } from 'next/app';
@@ -16,7 +17,9 @@ function App({ Component, pageProps }: AppProps<{}>) {
     <div className={inter.className}>
       <Toaster />
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <PopupStateProvider>
+          <Component {...pageProps} />
+        </PopupStateProvider>
       </QueryClientProvider>
     </div>
   );

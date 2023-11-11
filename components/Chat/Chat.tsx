@@ -34,6 +34,7 @@ import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
+import { usePopupState } from "../Popup/PopupContext"
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -41,6 +42,7 @@ interface Props {
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
   const { t } = useTranslation('chat');
+  const { popupValue, updatePopupValue } = usePopupState()
 
   const {
     state: {
@@ -71,7 +73,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
-      await ProcessPayment();
+      const payment = await ProcessPayment();
+      
+      if (!payment) {
+        const getalbyIcon = "https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png";
+        updatePopupValue({ hidden: false, icon: getalbyIcon, text: "Please use a modern browser with the getalby.com extension installed." });
+        return;
+      }
 
       if (selectedConversation) {
         let updatedConversation: Conversation;
