@@ -24,7 +24,7 @@ export const ProcessPayment = async () => {
     await webln.enable();
     const result = await webln.keysend({
         destination: "03dd1b795652debf811f93142ea4e7015889929e43220966e2431b38f74535dd23",
-        amount: "13",
+        amount: "2",
         customRecords: {
             "696969": "RobotKnows"
         }
