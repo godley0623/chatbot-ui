@@ -71,7 +71,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
-      await ProcessPayment();
+      const response = await ProcessPayment();
+      console.log(response);
+
+      if (!response) {
+        // If response is false, it indicates that the user doesn't have Alby. Exit the function and don't run query.
+        return;
+      }
+
 
       if (selectedConversation) {
         let updatedConversation: Conversation;

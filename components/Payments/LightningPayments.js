@@ -1,8 +1,7 @@
 export const ProcessPayment = async () => {
     //await makeKeysendPayment();
-    await requestPayment();
+    return await requestPayment();
    };
-   
    
    const requestPayment = async () => {
      try {
