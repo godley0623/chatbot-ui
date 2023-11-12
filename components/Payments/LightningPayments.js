@@ -14,24 +14,27 @@ const requestPayment = async () => {
   } catch (error) {
     //User denied permission or canceled
     console.log(error);
+    return false;
   }
 
   if (!window.webln) {
     return false;
+  } else {
+    console.log("Payment is being processed.")
+    await webln.enable();
+    const result = await webln.keysend({
+      destination: "03dd1b795652debf811f93142ea4e7015889929e43220966e2431b38f74535dd23",
+      amount: "13",
+      customRecords: {
+        "696969": "RobotKnows"
+      }
+  
+  
+    });
+    console.log("Payment Complete.")
+    console.log(result)
+    return true;
   }
-
-
-  await webln.enable();
-  const result = await webln.keysend({
-    destination: "03dd1b795652debf811f93142ea4e7015889929e43220966e2431b38f74535dd23",
-    amount: "13",
-    customRecords: {
-      "696969": "RobotKnows"
-    }
-
-
-  });
-  console.log(result)
 };
 
 
