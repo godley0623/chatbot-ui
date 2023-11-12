@@ -29,19 +29,10 @@ const requestPayment = async () => {
       "696969": "RobotKnows"
     }
 
+
   });
   console.log(result)
 };
-
-
-
-
-
-
-
-
-
-
 
 
 const makeKeysendPayment = async () => {
