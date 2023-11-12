@@ -72,6 +72,16 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
+      const paymentInProgess: string | null = localStorage.getItem('pay-progress')
+      if (paymentInProgess) {
+        Swal.fire({
+          icon: "warning",
+          title: "Payment in process",
+          text: "Please wait until your payment is complete before trying another query.",
+          confirmButtonColor: "#202123"
+        })
+        return;
+      }
       const payment = await ProcessPayment();
       
       if (!payment) {
@@ -260,6 +270,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'messageIsStreaming', value: false });
         }
       }
+      localStorage.removeItem("pay-progress")
     },
     [
       apiKey,

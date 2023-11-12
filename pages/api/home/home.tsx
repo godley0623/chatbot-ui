@@ -98,6 +98,10 @@ const Home = ({
   );
 
   useEffect(() => {
+    localStorage.removeItem("pay-progress")
+  }, [])
+
+  useEffect(() => {
     if (data) dispatch({ field: 'models', value: data });
   }, [data, dispatch]);
 
