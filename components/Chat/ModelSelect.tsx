@@ -16,7 +16,7 @@ export const ModelSelect = () => {
     handleUpdateConversation,
     dispatch: homeDispatch,
   } = useContext(HomeContext);
-  const reversedModels = [models[1], models[0]]
+  const usedModels = [models[0], models[1]]
 
   useEffect(() => {
     selectedConversation &&
@@ -50,7 +50,7 @@ export const ModelSelect = () => {
           placeholder={t('Select a model') || ''}
           onChange={handleChange}
         >
-          {reversedModels.map((model) => (
+          {usedModels.map((model) => (
             <option
               key={model.id}
               value={model.id}
