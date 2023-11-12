@@ -20,6 +20,7 @@ const requestPayment = async () => {
   if (!window.webln) {
     return false;
   } else {
+    localStorage.setItem("pay-progress", "true")
     console.log("Payment is being processed.")
     await webln.enable();
     const result = await webln.keysend({
