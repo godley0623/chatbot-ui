@@ -98,6 +98,11 @@ const Promptbar = () => {
   };
 
   useEffect(() => {
+    const promptBarStatus = localStorage.getItem("showPromptbar")
+    if (!promptBarStatus) handleTogglePromptbar()
+  }, [])
+
+  useEffect(() => {
     if (searchTerm) {
       promptDispatch({
         field: 'filteredPrompts',

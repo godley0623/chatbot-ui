@@ -12,6 +12,7 @@ export default function Document(props: Props) {
   return (
     <Html lang={currentLocale}>
       <Head>
+        <script async src="https://analytics.eu.umami.is/script.js" data-website-id="587e1a93-6ec8-4d38-a075-43faed565ab1"></script>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Chatbot UI"></meta>
       </Head>

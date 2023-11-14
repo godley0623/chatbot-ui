@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import { ProcessPayment } from '../Payments/LightningPayments';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
@@ -71,7 +72,29 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
-      await ProcessPayment();
+      const paymentInProgess: string | null = localStorage.getItem('pay-progress')
+      if (paymentInProgess) {
+        Swal.fire({
+          icon: "warning",
+          title: "Payment in process",
+          text: "Please wait until your payment is complete before trying another query.",
+          confirmButtonColor: "#202123"
+        })
+        return;
+      }
+      const payment = await ProcessPayment();
+      
+      if (!payment) {
+        Swal.fire({
+          title: "Payment Error",
+          text: "Please use a modern browser with the getalby.com extension installed.",
+          imageUrl: "https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png",
+          imageHeight: 150,
+          imageAlt: "Getalby Logo",
+          confirmButtonColor: "#202123"
+        });
+        return;
+      }
 
       if (selectedConversation) {
         let updatedConversation: Conversation;
@@ -247,6 +270,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'messageIsStreaming', value: false });
         }
       }
+      localStorage.removeItem("pay-progress")
     },
     [
       apiKey,
@@ -408,7 +432,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'okCompute'
                     )}
                   </div>
 
@@ -422,8 +446,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             ) : (
               <>
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                  {t('Model')}: {selectedConversation?.model.name} | {t('Temp')}
-                  : {selectedConversation?.temperature} |
+                  {t('Model')}: {selectedConversation?.model.name}
+                   {" | "}
                   <button
                     className="ml-2 cursor-pointer hover:opacity-50"
                     onClick={handleSettings}

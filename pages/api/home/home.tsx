@@ -31,6 +31,8 @@ import { FolderInterface, FolderType } from '@/types/folder';
 import { OpenAIModelID, OpenAIModels, fallbackModelID } from '@/types/openai';
 import { Prompt } from '@/types/prompt';
 
+import Popup from '@/components/Popup/Popup'
+
 import { Chat } from '@/components/Chat/Chat';
 import { Chatbar } from '@/components/Chatbar/Chatbar';
 import { Navbar } from '@/components/Mobile/Navbar';
@@ -38,6 +40,8 @@ import Promptbar from '@/components/Promptbar';
 
 import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';
+
+import { usePopupState } from '@/components/Popup/PopupContext';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -56,6 +60,8 @@ const Home = ({
   const { getModels } = useApiService();
   const { getModelsError } = useErrorService();
   const [initialRender, setInitialRender] = useState<boolean>(true);
+
+  const { popupValue } = usePopupState()
 
   const contextValue = useCreateReducer<HomeInitialState>({
     initialState,
@@ -90,6 +96,10 @@ const Home = ({
     },
     { enabled: true, refetchOnMount: false },
   );
+
+  useEffect(() => {
+    localStorage.removeItem("pay-progress")
+  }, [])
 
   useEffect(() => {
     if (data) dispatch({ field: 'models', value: data });
@@ -360,7 +370,7 @@ const Home = ({
       }}
     >
       <Head>
-        <title>Chatbot UI</title>
+        <title>okCompute</title>
         <meta name="description" content="ChatGPT but better." />
         <meta
           name="viewport"
@@ -372,6 +382,7 @@ const Home = ({
         <main
           className={`flex h-screen w-screen flex-col text-sm text-white dark:text-white ${lightMode}`}
         >
+          {!popupValue.hidden && <Popup />}
           <div className="fixed top-0 w-full sm:hidden">
             <Navbar
               selectedConversation={selectedConversation}
