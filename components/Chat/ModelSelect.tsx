@@ -16,7 +16,7 @@ export const ModelSelect = () => {
     handleUpdateConversation,
     dispatch: homeDispatch,
   } = useContext(HomeContext);
-  const usedModels = [models[0], models[1]]
+  const usedModels = [models[1], models[2]]
 
   useEffect(() => {
     selectedConversation &&
