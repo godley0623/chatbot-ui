@@ -13,6 +13,8 @@ import { SidebarButton } from '../../Sidebar/SidebarButton';
 import ChatbarContext from '../Chatbar.context';
 import { ClearConversations } from './ClearConversations';
 import { PluginKeys } from './PluginKeys';
+import { IconAbout } from './IconAbout';
+import Swal from 'sweetalert2';
 
 export const ChatbarSettings = () => {
   const { t } = useTranslation('sidebar');
@@ -36,6 +38,15 @@ export const ChatbarSettings = () => {
     handleApiKeyChange,
   } = useContext(ChatbarContext);
 
+  const handleAbout = () => {
+    Swal.fire({
+      title: "About",
+      text: "Enter About text here",
+      icon: "question",
+      confirmButtonColor: "#202123"
+    })
+  }
+
   return (
     <div className="flex flex-col items-center space-y-1 border-t border-white/20 pt-1 text-sm">
       {conversations.length > 0 ? (
@@ -54,6 +65,12 @@ export const ChatbarSettings = () => {
         text={t('Settings')}
         icon={<IconSettings size={18} />}
         onClick={() => setIsSettingDialog(true)}
+      />
+
+      <SidebarButton
+        text={t('About')}
+        icon={<IconAbout />}
+        onClick={() => handleAbout()}
       />
 
       <SettingDialog
