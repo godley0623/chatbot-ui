@@ -42,7 +42,7 @@ export const ChatbarSettings = () => {
     Swal.fire({
       title: "About",
       text: "Enter About text here",
-      icon: "question",
+      icon: "info",
       confirmButtonColor: "#202123"
     })
   }
