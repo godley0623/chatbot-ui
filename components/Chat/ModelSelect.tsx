@@ -7,23 +7,39 @@ import { OpenAIModel } from '@/types/openai';
 
 import HomeContext from '@/pages/api/home/home.context';
 
+import { models, defaultModel } from '../../controller/modelDetails';
+
 export const ModelSelect = () => {
   const { t } = useTranslation('chat');
   const selectRef = useRef(null)
 
   const {
-    state: { selectedConversation, models, defaultModelId },
+    state: { selectedConversation, defaultModelId },
     handleUpdateConversation,
     dispatch: homeDispatch,
   } = useContext(HomeContext);
-  const usedModels = [models[1], models[2]]
+  
+  const savedModel = localStorage.getItem('saved-model') || ""
+  const modelArr = []
+
+  for (let i = 0; i < models.length; i++) {
+    if (savedModel && models[i].id === savedModel) {
+      modelArr.unshift(models[i])
+    } else if (!savedModel && models[i].id === defaultModel) {
+      modelArr.unshift(models[i])
+    } else {
+      modelArr.push(models[i])
+    }
+  }
+  console.log(savedModel)
+  console.log(modelArr)
 
   useEffect(() => {
     selectedConversation &&
     handleUpdateConversation(selectedConversation, {
       key: 'model',
       value: models.find(
-        (model) => model.id === 'gpt-4',
+        (model) => model.id === savedModel || defaultModel,
       ) as OpenAIModel,
     });
   }, [])
@@ -36,6 +52,7 @@ export const ModelSelect = () => {
           (model) => model.id === e.target.value,
         ) as OpenAIModel,
       });
+      localStorage.setItem('saved-model', e.target.value)
   };
 
   return (
@@ -50,7 +67,7 @@ export const ModelSelect = () => {
           placeholder={t('Select a model') || ''}
           onChange={handleChange}
         >
-          {usedModels.map((model) => (
+          {modelArr.map((model) => (
             <option
               key={model.id}
               value={model.id}

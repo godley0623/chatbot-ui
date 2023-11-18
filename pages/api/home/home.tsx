@@ -269,7 +269,7 @@ const Home = ({
       });
     }
 
-    const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+    const apiKey = "fake-key";
 
     if (serverSideApiKeyIsSet) {
       dispatch({ field: 'apiKey', value: '' });
