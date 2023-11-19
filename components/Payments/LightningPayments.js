@@ -1,7 +1,9 @@
+let errorBody;
+
 export const ProcessPayment = async () => {
   //await makeKeysendPayment();
- const payment = await requestPayment();
- return payment;
+  const payment = await requestPayment();
+  return payment;
 };
 
 
@@ -14,27 +16,58 @@ const requestPayment = async () => {
   } catch (error) {
     //User denied permission or canceled
     console.log(error);
-    return false;
+    errorBody = {
+      icon: "error",
+      title: "Payment Error",
+      text: "User denied permission or canceled",
+      imageHeight: 150,
+      imageAlt: "Getalby Logo",
+      confirmButtonColor: "#202123"
+    }
+    return { payment: false, error: errorBody };
   }
 
   if (!window.webln) {
-    return false;
+    errorBody = {
+      title: "Payment Error",
+      text: "Please use a modern browser with the getalby.com extension installed.",
+      imageUrl: "https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png",
+      imageHeight: 150,
+      imageAlt: "Getalby Logo",
+      confirmButtonColor: "#202123"
+    }
+    return { payment: false, error: errorBody };
   } else {
     localStorage.setItem("pay-progress", "true")
     console.log("Payment is being processed.")
     await webln.enable();
-    const result = await webln.keysend({
-      destination: "03dd1b795652debf811f93142ea4e7015889929e43220966e2431b38f74535dd23",
-      amount: "13",
-      customRecords: {
-        "696969": "RobotKnows"
+    let result;
+
+    try {
+      result = await webln.keysend({
+        destination: "03dd1b795652debf811f93142ea4e7015889929e43220966e2431b38f74535dd23",
+        amount: "13",
+        customRecords: {
+          "696969": "RobotKnows"
+        }
+
+
+      });
+    } catch (error) {
+      errorBody = {
+        icon: "error",
+        title: "Payment Error",
+        text: `${error}`,
+        imageHeight: 150,
+        imageAlt: "Getalby Logo",
+        confirmButtonColor: "#202123"
       }
-  
-  
-    });
+      return { payment: false, error: errorBody }
+    }
+
     console.log("Payment Complete.")
     console.log(result)
-    return true;
+    return { payment: true, error: errorBody };
   }
 };
 

@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'
+import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { ProcessPayment } from '../Payments/LightningPayments';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
@@ -86,16 +86,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         return;
       }
       const payment = await ProcessPayment();
+      const error = payment.error
       
-      if (!payment) {
-        Swal.fire({
-          title: "Payment Error",
-          text: "Please use a modern browser with the getalby.com extension installed.",
-          imageUrl: "https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png",
-          imageHeight: 150,
-          imageAlt: "Getalby Logo",
-          confirmButtonColor: "#202123"
-        });
+      if (!payment.payment) {
+        Swal.fire(error);
+        localStorage.removeItem("pay-progress")
         return;
       }
 
