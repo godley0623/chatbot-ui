@@ -31,8 +31,6 @@ export const ModelSelect = () => {
       modelArr.push(models[i])
     }
   }
-  console.log(savedModel)
-  console.log(modelArr)
 
   useEffect(() => {
     selectedConversation &&
