@@ -1,6 +1,9 @@
 export const sendOutput = async (body)  => {
+
+    const API_URL = process.env.REACT_APP_API_URL;
+    console.log(API_URL)
     try {
-        const response = await fetch('http://localhost:4000/countOutput', {
+        const response = await fetch(`${API_URL}/countOutput`, {
             method: 'POST', // Use POST method to send data
             headers: {
                 'Content-Type': 'application/json' // Specify that we're sending JSON
