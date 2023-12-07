@@ -1,5 +1,7 @@
+import { sendOutput } from '../../components/Payments/sendOutput';
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
+
 
 import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION } from '../app/const';
 
@@ -65,7 +67,6 @@ export const OpenAIStream = async (
 
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
-
   if (res.status !== 200) {
     const result = await res.json();
     if (result.error) {
@@ -83,9 +84,10 @@ export const OpenAIStream = async (
       );
     }
   }
-
+  let fullOutput = ''; 
   const stream = new ReadableStream({
     async start(controller) {
+      
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data;
@@ -93,10 +95,13 @@ export const OpenAIStream = async (
           try {
             const json = JSON.parse(data);
             if (json.choices[0].finish_reason != null) {
+              //Call output token counter here. sendOutput calls backend function to count tokens.
+              sendOutput(fullOutput);
               controller.close();
               return;
             }
             const text = json.choices[0].delta.content;
+            fullOutput += text;
             const queue = encoder.encode(text);
             controller.enqueue(queue);
           } catch (e) {
