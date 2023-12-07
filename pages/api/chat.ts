@@ -35,6 +35,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const prompt_tokens = encoding.encode(promptToSend);
+    
 
     let tokenCount = prompt_tokens.length;
     let messagesToSend: Message[] = [];

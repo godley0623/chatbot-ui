@@ -1,5 +1,6 @@
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { ProcessPayment } from '../Payments/LightningPayments';
+import { processInput } from '../Payments/generateInvoice';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -85,14 +86,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         })
         return;
       }
-      const payment = await ProcessPayment();
-      const error = payment.error
-      
-      if (!payment.payment) {
-        Swal.fire(error);
-        localStorage.removeItem("pay-progress")
-        return;
-      }
 
       if (selectedConversation) {
         let updatedConversation: Conversation;
@@ -128,6 +121,17 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         let body;
         if (!plugin) {
           body = JSON.stringify(chatBody);
+          //Process payment
+          const invoice = await processInput(body);
+          const payment = await ProcessPayment(invoice);
+          const error = payment.error
+          
+          if (!payment.payment) {
+            Swal.fire(error);
+            localStorage.removeItem("pay-progress")
+            return;
+          }
+          //End process payment
         } else {
           body = JSON.stringify({
             ...chatBody,
