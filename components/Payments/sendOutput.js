@@ -1,7 +1,8 @@
 export const sendOutput = async (body)  => {
-
     const API_URL = process.env.REACT_APP_API_URL;
-    console.log(API_URL)
+    
+    console.log('API_URL2', API_URL)
+    console.log(process.env)
     try {
         const response = await fetch(`${API_URL}/countOutput`, {
             method: 'POST', // Use POST method to send data

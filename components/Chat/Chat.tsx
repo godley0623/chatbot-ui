@@ -1,6 +1,6 @@
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import { ProcessPayment } from '../Payments/LightningPayments';
-import { processInput } from '../Payments/generateInvoice';
+import { processInput } from '../Payments/processInput';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -434,7 +434,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'BitsforBoops'
+                      'BitsForBoops'
                     )}
                   </div>
 

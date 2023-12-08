@@ -1,5 +1,5 @@
 export const processInput = async (body)  => {
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     try {
         const response = await fetch(`${API_URL}/processInput`, {
             method: 'POST', // Use POST method to send data
