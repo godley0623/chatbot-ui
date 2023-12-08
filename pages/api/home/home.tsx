@@ -370,7 +370,7 @@ const Home = ({
       }}
     >
       <Head>
-        <title>okCompute</title>
+        <title>BitsForBoops</title>
         <meta name="description" content="ChatGPT but better." />
         <meta
           name="viewport"
