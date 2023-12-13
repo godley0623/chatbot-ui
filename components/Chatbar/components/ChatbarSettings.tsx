@@ -67,7 +67,7 @@ export const ChatbarSettings = () => {
         <p>The cost of each query depends both on the amount of input tokens you give the bot as well as the number of output tokens that it gives back.</p>
         <br></br>
         <p><strong>Important:</strong> The input tokens account for not just the most recent question, but the entire chat history of the current conversation. As the conversation lengthens, the cost for a query increases. To keep queries less expensive, consider starting a new chat session and asking a fresh question.</p>
-        <!-- End of formatted content -->
+        <!--End of formatted content-->
       </div>`,
       icon: "question",
       confirmButtonColor: "#202123"
