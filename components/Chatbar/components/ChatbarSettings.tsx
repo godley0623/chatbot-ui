@@ -39,10 +39,21 @@ export const ChatbarSettings = () => {
     handleApiKeyChange,
   } = useContext(ChatbarContext);
 
+  
+
   const handleAbout = () => {
     Swal.fire({
       title: "About",
-      text: "BitsForBoops is a pay per query Chatbot leverages the openAI API and which uses Bitcoin for its payments. It was developed by Matt Ahlborg (@mattahlborg on Twitter). If you have any questions or feedback, please reach out to Matt on Twitter.",
+      html: `
+      <div style="text-align: left;">
+        <!-- Start of formatted content -->
+        <p>BitsForBoops is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring GPT4 access to more people in the world. It was created by <a href="https://twitter.com/mattahlborg" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Matt Ahlborg</a>. If you have any questions or feedback, please reach out to Matt on Twitter.</p>
+        <br></br>
+        <p>BitsForBoops currently only works with with Alby Extension, but more payment functionality will be added soon.</p>
+        <br></br>
+        <p>BitsForBoops uses <a href="https://github.com/mckaywrigley" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">mckaywrigley's</a> wonderful <a href="https://github.com/mckaywrigley/chatbot-ui" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Chatbot UI</a> as a starting point.</p>
+        <!-- End of formatted content -->
+      </div>`,
       icon: "info",
       confirmButtonColor: "#202123"
     })
@@ -50,7 +61,14 @@ export const ChatbarSettings = () => {
   const handleHowItWorks = () => {
     Swal.fire({
       title: "How it Works",
-      text: "The cost of each query depends both on the amount of input tokens you give the bot as well as the number of output tokens that it gives back. Importantly, the amount of input tokens is not only from the most recent question, but also the entire chat history of the current conversation that you have open. So, the longer the conversation gets, the more expensive the query will get. If you wish to keep your queries cheaper, you will need to open up a new chat with the bot and ask a fresh question.",
+      html: `
+      <div style="text-align: left;">
+        <!-- Start of formatted content -->
+        <p>The cost of each query depends both on the amount of input tokens you give the bot as well as the number of output tokens that it gives back.</p>
+        <br></br>
+        <p><strong>Important:</strong> The input tokens account for not just the most recent question, but the entire chat history of the current conversation. As the conversation lengthens, the cost for a query increases. To keep queries less expensive, consider starting a new chat session and asking a fresh question.</p>
+        <!-- End of formatted content -->
+      </div>`,
       icon: "question",
       confirmButtonColor: "#202123"
     })
