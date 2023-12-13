@@ -14,6 +14,7 @@ import ChatbarContext from '../Chatbar.context';
 import { ClearConversations } from './ClearConversations';
 import { PluginKeys } from './PluginKeys';
 import { IconAbout } from './IconAbout';
+import { IconQuestion } from './IconQuestion';
 import Swal from 'sweetalert2';
 
 export const ChatbarSettings = () => {
@@ -41,8 +42,16 @@ export const ChatbarSettings = () => {
   const handleAbout = () => {
     Swal.fire({
       title: "About",
-      text: "Enter About text here",
+      text: "BitsForBoops is a pay per query Chatbot leverages the openAI API and which uses Bitcoin for its payments. It was developed by Matt Ahlborg (@mattahlborg on Twitter). If you have any questions or feedback, please reach out to Matt on Twitter.",
       icon: "info",
+      confirmButtonColor: "#202123"
+    })
+  }
+  const handleHowItWorks = () => {
+    Swal.fire({
+      title: "How it Works",
+      text: "The cost of each query depends both on the amount of input tokens you give the bot as well as the number of output tokens that it gives back. Importantly, the amount of input tokens is not only from the most recent question, but also the entire chat history of the current conversation that you have open. So, the longer the conversation gets, the more expensive the query will get. If you wish to keep your queries cheaper, you will need to open up a new chat with the bot and ask a fresh question.",
+      icon: "question",
       confirmButtonColor: "#202123"
     })
   }
@@ -71,6 +80,11 @@ export const ChatbarSettings = () => {
         text={t('About')}
         icon={<IconAbout />}
         onClick={() => handleAbout()}
+      />
+      <SidebarButton
+        text={t('How it Works')}
+        icon={<IconQuestion />}
+        onClick={() => handleHowItWorks()}
       />
 
       <SettingDialog
