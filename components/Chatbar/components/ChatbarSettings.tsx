@@ -83,18 +83,6 @@ export const ChatbarSettings = () => {
       <Import onImport={handleImportConversations} />
 
       <SidebarButton
-        text={t('Export data')}
-        icon={<IconFileExport size={18} />}
-        onClick={() => handleExportData()}
-      />
-
-      <SidebarButton
-        text={t('Settings')}
-        icon={<IconSettings size={18} />}
-        onClick={() => setIsSettingDialog(true)}
-      />
-
-      <SidebarButton
         text={t('About')}
         icon={<IconAbout />}
         onClick={() => handleAbout()}
@@ -103,6 +91,17 @@ export const ChatbarSettings = () => {
         text={t('How it Works')}
         icon={<IconQuestion />}
         onClick={() => handleHowItWorks()}
+      />
+      <SidebarButton
+        text={t('Settings')}
+        icon={<IconSettings size={18} />}
+        onClick={() => setIsSettingDialog(true)}
+      />
+
+      <SidebarButton
+        text={t('Export data')}
+        icon={<IconFileExport size={18} />}
+        onClick={() => handleExportData()}
       />
 
       <SettingDialog
