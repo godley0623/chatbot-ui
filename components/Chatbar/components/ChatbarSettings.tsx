@@ -6,8 +6,6 @@ import { useTranslation } from 'next-i18next';
 import HomeContext from '@/pages/api/home/home.context';
 
 import { SettingDialog } from '@/components/Settings/SettingDialog';
-
-import { Import } from '../../Settings/Import';
 import { Key } from '../../Settings/Key';
 import { SidebarButton } from '../../Sidebar/SidebarButton';
 import ChatbarContext from '../Chatbar.context';
@@ -80,18 +78,18 @@ export const ChatbarSettings = () => {
         <ClearConversations onClearConversations={handleClearConversations} />
       ) : null}
 
-      <Import onImport={handleImportConversations} />
+      <SidebarButton
+        text={t('How it Works')}
+        icon={<IconQuestion />}
+        onClick={() => handleHowItWorks()}
+      />
 
       <SidebarButton
         text={t('About')}
         icon={<IconAbout />}
         onClick={() => handleAbout()}
       />
-      <SidebarButton
-        text={t('How it Works')}
-        icon={<IconQuestion />}
-        onClick={() => handleHowItWorks()}
-      />
+
       <SidebarButton
         text={t('Settings')}
         icon={<IconSettings size={18} />}
