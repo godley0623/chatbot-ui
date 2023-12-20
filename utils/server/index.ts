@@ -87,15 +87,14 @@ export const OpenAIStream = async (
   let fullOutput = ''; 
   const stream = new ReadableStream({
     async start(controller) {
-      
+
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data;
-
+          if (data !== '[DONE]') {
           try {
             const json = JSON.parse(data);
             if (json.choices[0].finish_reason != null) {
-              //Call output token counter here. sendOutput calls backend function to count tokens.
               sendOutput(fullOutput);
               controller.close();
               return;
@@ -108,6 +107,7 @@ export const OpenAIStream = async (
             controller.error(e);
           }
         }
+      }
       };
 
       const parser = createParser(onParse);
