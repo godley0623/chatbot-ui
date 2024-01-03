@@ -37,8 +37,6 @@ export const ChatbarSettings = () => {
     handleApiKeyChange,
   } = useContext(ChatbarContext);
 
-  
-
   const handleAbout = () => {
     Swal.fire({
       title: "About",
