@@ -1,15 +1,8 @@
 import { sendOutput } from '../../components/Payments/sendOutput';
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
-
-
 import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION } from '../app/const';
-
-import {
-  ParsedEvent,
-  ReconnectInterval,
-  createParser,
-} from 'eventsource-parser';
+import { ParsedEvent, ReconnectInterval, createParser } from 'eventsource-parser';
 
 export class OpenAIError extends Error {
   type: string;
@@ -28,9 +21,9 @@ export class OpenAIError extends Error {
 export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
-  temperature : number,
+  temperature: number,
   key: string,
-  messages: Message[],
+  messages: Message[]
 ) => {
   let url = `${OPENAI_API_HOST}/v1/chat/completions`;
   if (OPENAI_API_TYPE === 'azure') {
@@ -78,36 +71,34 @@ export const OpenAIStream = async (
       );
     } else {
       throw new Error(
-        `OpenAI API returned an error: ${
-          decoder.decode(result?.value) || result.statusText
-        }`,
+        `OpenAI API returned an error: ${decoder.decode(result?.value) || result.statusText}`
       );
     }
   }
+  
   let fullOutput = ''; 
   const stream = new ReadableStream({
     async start(controller) {
-
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data;
           if (data !== '[DONE]') {
-          try {
-            const json = JSON.parse(data);
-            if (json.choices[0].finish_reason != null) {
-              sendOutput(fullOutput);
-              controller.close();
-              return;
+            try {
+              const json = JSON.parse(data);
+              if (json.choices[0].finish_reason != null) {
+                sendOutput(fullOutput);
+                controller.close();
+                return;
+              }
+              const text = json.choices[0].delta.content;
+              fullOutput += text;
+              const queue = encoder.encode(text);
+              controller.enqueue(queue);
+            } catch (e) {
+              controller.error(e);
             }
-            const text = json.choices[0].delta.content;
-            fullOutput += text;
-            const queue = encoder.encode(text);
-            controller.enqueue(queue);
-          } catch (e) {
-            controller.error(e);
           }
         }
-      }
       };
 
       const parser = createParser(onParse);

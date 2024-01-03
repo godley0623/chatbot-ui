@@ -123,6 +123,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           body = JSON.stringify(chatBody);
           //Process payment
           const invoice = await processInput(body);
+          if (invoice) {
+            localStorage.setItem('invoice', invoice); // Storing the invoice in local storage
+          } else {
+            // Handle the case where invoice is null or undefined
+            console.error('Invoice is not generated');
+          }
+          
           const payment = await ProcessPayment(invoice);
           const error = payment.error
           

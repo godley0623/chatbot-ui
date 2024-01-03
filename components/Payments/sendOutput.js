@@ -2,10 +2,11 @@ export const sendOutput = async (body)  => {
     const API_URL = process.env.REACT_APP_API_URL;
 
     try {
-        const response = await fetch(`${API_URL}/countOutput`, {
+        const response = await fetch(`${API_URL}/countOutputTokens`, {
             method: 'POST', // Use POST method to send data
             headers: {
-                'Content-Type': 'application/json' // Specify that we're sending JSON
+                'Content-Type': 'application/json'
+                
             },
             body: JSON.stringify({ messages: body })
         });
