@@ -131,11 +131,28 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         if (!plugin) {
           body = JSON.stringify(chatBody);
 
-          // Process payment new
-          // localStorage.setItem('credit_id', '1234');
-          console.time("PaymentProcessing time");
-          await PaymentProcessing(body);
-          console.timeEnd("PaymentProcessing time");
+          // SweetAlert modal before PaymentProcessing
+          const proceedWithPayment = await Swal.fire({
+            title: 'Confirm Payment',
+            text: 'Do you want to proceed with the payment?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed'
+          });
+
+          // Check if the user confirmed the action
+          if (proceedWithPayment.isConfirmed) {
+            console.time("PaymentProcessing time");
+            await PaymentProcessing(body);
+            console.timeEnd("PaymentProcessing time");
+            // Continue with the rest of the code after PaymentProcessing
+          } else {
+            // Handle the case where user cancels the payment
+            console.log("Payment cancelled by user");
+            return; // Exit the function if payment is cancelled
+          }
 
           
 
