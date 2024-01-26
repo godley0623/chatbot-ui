@@ -1,5 +1,7 @@
 import { IconFileExport, IconSettings } from '@tabler/icons-react';
 import { useContext, useState } from 'react';
+import dynamic from 'next/dynamic';
+import Modal from '../../Payments/Modal';
 
 import { useTranslation } from 'next-i18next';
 
@@ -29,6 +31,13 @@ export const ChatbarSettings = () => {
     },
     dispatch: homeDispatch,
   } = useContext(HomeContext);
+
+  const Button = dynamic(
+    () => import('@getalby/bitcoin-connect-react').then((mod) => mod.Button),
+    {
+      ssr: false,
+    }
+  );
 
   const {
     handleClearConversations,
@@ -70,6 +79,10 @@ export const ChatbarSettings = () => {
     })
   }
 
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => setShowModal(!showModal);
+
   return (
     <div className="flex flex-col items-center space-y-1 border-t border-white/20 pt-1 text-sm">
       {conversations.length > 0 ? (
@@ -99,6 +112,7 @@ export const ChatbarSettings = () => {
         icon={<IconFileExport size={18} />}
         onClick={() => handleExportData()}
       />
+      
 
       <SettingDialog
         open={isSettingDialogOpen}
@@ -106,6 +120,17 @@ export const ChatbarSettings = () => {
           setIsSettingDialog(false);
         }}
       />
+      <br></br>
+      <Button />
+      <br></br>
+
+      <button onClick={toggleModal}>Open Modal</button>
+            <Modal show={showModal} onClose={toggleModal}>
+                <p>This is modal content!</p>
+            </Modal>
     </div>
+
+
+    
   );
 };

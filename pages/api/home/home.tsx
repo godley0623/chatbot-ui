@@ -371,12 +371,13 @@ const Home = ({
     >
       <Head>
         <title>BitsForBoops</title>
+        
         <meta name="description" content="ChatGPT but better." />
         <meta
           name="viewport"
           content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://i.imgur.com/K1mBOoR.png" />
       </Head>
       {selectedConversation && (
         <main
@@ -392,12 +393,15 @@ const Home = ({
 
           <div className="flex h-full w-full pt-[48px] sm:pt-0">
             <Chatbar />
+            
 
             <div className="flex flex-1">
               <Chat stopConversationRef={stopConversationRef} />
+              
             </div>
 
             <Promptbar />
+            
           </div>
         </main>
       )}
