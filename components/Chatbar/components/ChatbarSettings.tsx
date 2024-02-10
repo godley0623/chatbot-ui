@@ -44,11 +44,8 @@ export const ChatbarSettings = () => {
       html: `
       <div style="text-align: left;">
         <!-- Start of formatted content -->
-        <p>BitsForBoops is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring GPT4 access to more people in the world. It was created by <a href="https://twitter.com/mattahlborg" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Matt Ahlborg</a>. If you have any questions or feedback, please reach out to Matt on Twitter.</p>
+        <p>BitsForBoops is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring GPT4 access to more people globally. It was created by <a href="https://twitter.com/mattahlborg" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Matt Ahlborg</a>. If you have any questions or feedback, please reach out to Matt on Twitter.</p>
         <br></br>
-        <p>BitsForBoops currently only works with with Alby Extension, but more payment functionality will be added soon.</p>
-        <br></br>
-        <p>BitsForBoops uses <a href="https://github.com/mckaywrigley" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">mckaywrigley's</a> wonderful <a href="https://github.com/mckaywrigley/chatbot-ui" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Chatbot UI</a> as a starting point.</p>
         <!-- End of formatted content -->
       </div>`,
       icon: "info",

@@ -51,11 +51,15 @@ const handleError = (error, title) => {
 // Use useEffect for initializing webln object
 const useWeblnInitializer = () => {
   useEffect(() => {
-    // Dynamically import the onConnected function
     const initWebln = async () => {
       const { onConnected } = await import('@getalby/bitcoin-connect-react');
       const unsub = onConnected((provider) => {
         window.webln = provider;
+
+        // Set showBalance to false
+        if (window.webln && typeof window.webln.setShowBalance === 'function') {
+          window.webln.setShowBalance(false);
+        }
       });
 
       return () => unsub();

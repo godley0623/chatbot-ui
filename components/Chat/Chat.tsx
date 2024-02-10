@@ -1,4 +1,3 @@
-import { PaymentProcessing } from '@/components/Payments/PaymentProcessing';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -27,14 +26,14 @@ import { Plugin } from '@/types/plugin';
 import HomeContext from '@/pages/api/home/home.context';
 
 import { useWeblnInitializer } from '../../components/Payments/ProcessBCPayment';
+import { PaymentProcessing } from '@/components/Payments/PaymentProcessing';
 
 import {
   defaultModel,
   getModelById,
   getModelNameById,
 } from '../../controller/modelDetails';
-import { ProcessPayment } from '../Payments/LightningPayments';
-import { processInput } from '../Payments/processInput';
+
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
@@ -44,7 +43,7 @@ import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 
-import Swal, { SweetAlertOptions } from 'sweetalert2';
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -127,52 +126,36 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           temperature: updatedConversation.temperature,
         };
         const endpoint = getEndpoint(plugin);
-        let body;
+        let body: string;
         if (!plugin) {
           body = JSON.stringify(chatBody);
 
-          // SweetAlert modal before PaymentProcessing
-          const proceedWithPayment = await Swal.fire({
-            title: 'Confirm Payment',
-            text: 'Do you want to proceed with the payment?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, proceed'
-          });
+          //Process payment
+          let response;
+          response = await PaymentProcessing(body);
+          console.log('response', response);
+          if (response === undefined) {
+          }
+          else if (response === 'bought credit') {
+            response = await PaymentProcessing(body);
+          }
+          else if (response === 'cancelled') {
+            //This is hacky way to solve 'stop generating' issue.
+            window.location.reload();
+            return;
+          }
+          else if (response === 'lump sum payment'){
 
-          // Check if the user confirmed the action
-          if (proceedWithPayment.isConfirmed) {
-            console.time("PaymentProcessing time");
-            await PaymentProcessing(body);
-            console.timeEnd("PaymentProcessing time");
-            // Continue with the rest of the code after PaymentProcessing
-          } else {
-            // Handle the case where user cancels the payment
-            console.log("Payment cancelled by user");
-            return; // Exit the function if payment is cancelled
+          }
+          else if (response === 'alby payment complete') {
+
+          }
+          else if (response === 'Insufficient credit') {
+            console.log('error');
+            return;
           }
 
-          
 
-          // const invoice = await processInput(body);
-
-          // if (invoice) {
-          //   localStorage.setItem('invoice', invoice); // Storing the invoice in local storage
-          // } else {
-          //   // Handle the case where invoice is null or undefined
-          //   console.error('Invoice is not generated');
-          // }
-
-          // const payment = await ProcessBCPaymentClient(invoice);
-          // const error = payment.error;
-
-          // if (!payment.payment) {
-          //   Swal.fire(error);
-          //   localStorage.removeItem('pay-progress');
-          //   return;
-          // }
           // //End process payment
         } else {
           body = JSON.stringify({

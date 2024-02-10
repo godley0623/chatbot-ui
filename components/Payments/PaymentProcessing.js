@@ -1,81 +1,84 @@
-import { processInput } from './processInput';
+import { ProcessPayment } from './LightningPayments';
 import { ProcessBCPaymentClient } from './ProcessBCPayment';
-import { addCreditRecord } from './addCreditRecord';
 import { addCreditByCreditId } from './addCreditByCreditId';
+import { addCreditRecord } from './addCreditRecord';
+import { initialPaymentModal } from './initialPaymentModal';
+import { InsufficientCreditModal } from './insufficientCreditModal';
+import { processInput } from './processInput';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 export const PaymentProcessing = async (body) => {
+  // Check local storage for existing credit string
+  let credit_id = localStorage.getItem('credit_id');
+  let new_credit_id;
 
-    // Check local storage for existing credit string
-    const credit_id = localStorage.getItem('credit_id');
+  try {
+    //if credit_id is null, then this is the first payment and should proceed with initial payment modal to let user set up their payment method
+    if (credit_id === null) {
+      let user_choice = await initialPaymentModal(credit_id);
+      if (user_choice === 'pay with alby') {
+        console.log('User chose to pay with alby');
+      }
+      //If user hits cancel button in payment modal
+      if (user_choice === 'cancelled') {
+        return user_choice;
+      }
+      //If user pays lump sum invoice
+      else if (user_choice.choice === 'bought credit') {
+        credit_id = user_choice.credit_id;
+        localStorage.setItem('credit_id', credit_id);
+        return user_choice.choice;
+      }
+    }
+    //processInput
+    let invoice;
+    let response = await processInput(body, credit_id);
+    if (typeof response === 'string') {
+      response = JSON.parse(response);
+    }
+    console.log('response:', response);
+    //Check Insufficient credit
+    if (response.error === "Insufficient credit") {
+      let user_choice = await InsufficientCreditModal();
+      return user_choice.choice;
+    }
+    invoice = response.payment_request;
+    new_credit_id = response.new_credit_id;
+    localStorage.setItem('credit_id', new_credit_id);
 
-    try {
-        // Send string to DB for verification and await its JSON response
-        let response = await processInput(body, credit_id);
-        response = JSON.parse(response);
-        let invoice = response.payment_request;
-        let new_credit_id = response.new_credit_id;
-        localStorage.setItem('credit_id', new_credit_id);
-
-        // Process the payment depending on whether or not the user is making first payment or is pulling from credit and making asynch payment.
-        let payment;
-        if (credit_id === null) {
-            console.log('credit_id is null')
-            payment = await ProcessBCPaymentClient(invoice);
-            if (payment.payment) {
-                addCreditRecord(new_credit_id, response.price_in_sats);
-            }
-        }
-        if (credit_id !== null) {
-            ProcessBCPaymentClient(invoice)
-                .then(() => {
-                    addCreditByCreditId(new_credit_id, response.price_in_sats);
-                })
-                .catch(error => {
-                    console.error("Error in ProcessBCPaymentClient:", error);
-                    // Handle error or do nothing if you only want to proceed on success
-                });
-        }
-
-        // Handle payment response
-        // if (!payment.payment) {
-        //     const error = payment.error;
-        //     Swal.fire({
-        //                     icon: 'error',
-        //     title: 'Oops...',
-        //     text: 'Something went wrong!',
-        //     });
-        //     localStorage.removeItem('pay-progress');
-        //     return;
-        // }
-
-    } catch (error) {
-        console.error('Error in PaymentProcessing:', error);
-        // Handle error (show alert, log error, etc.)
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',
+    // Process the payment depending on whether or not the user is making first payment or is pulling from credit and making asynch payment.
+    let payment;
+    if (credit_id === null) {
+      console.log('ProcessPayment executed');
+      payment = await ProcessPayment(invoice);
+      if (payment.payment) {
+        addCreditRecord(new_credit_id, response.price_in_sats);
+        console.log('addCreditRecord complete');
+        return 'alby payment complete'
+      }
+    }
+    if (credit_id !== null) {
+      if (credit_id.startsWith('ls-')) {
+        return 'lump sum payment';
+      }
+      console.log('ProcessPayment executed');
+      ProcessPayment(invoice)
+        .then(() => {
+          console.log('addCreditByCreditId executed');
+          addCreditByCreditId(new_credit_id, response.price_in_sats);
+        })
+        .catch((error) => {
+          console.error('Error in ProcessPayment:', error);
+          // Handle error or do nothing if you only want to proceed on success
         });
     }
+  } catch (error) {
+    console.error('Error in PaymentProcessing:', error);
+    // Handle error (show alert, log error, etc.)
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!',
+    });
+  }
 };
-
-// You can call PaymentProcessing function from your component or event handler
-
-
-            //send string to DB for verification
-          //if valid===True
-          //check if account credit is enough
-            //if enough===True
-              //deduct credit from DB
-              //initiate new payment in background
-              //Run query
-            //else if enough===False
-            //return insufficient funds error
-          //elif valid===False
-            //return invalid credit error
-        //elif isConnected === True
-            //Run initial payment... this will be similar to running regular payment except for it will be larger.
-
-        //else isConnected === False
-          //Bring up Bitcoin connect modal
