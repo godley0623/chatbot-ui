@@ -2,6 +2,7 @@ let errorBody;
 
 export const ProcessPayment = async (invoice) => {
   const payment = await requestPayment(invoice);
+  console.log(payment, 'payment')
   return payment;
 };
 

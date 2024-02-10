@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.2",
+    "@getalby/bitcoin-connect": "^3.2.1",
+    "@getalby/bitcoin-connect-react": "^3.2.1",
     "@tabler/icons-react": "^2.9.0",
     "eventsource-parser": "^0.1.0",
     "i18next": "^22.4.13",
@@ -20,6 +22,7 @@
     "next-i18next": "^13.2.2",
     "openai": "^3.2.1",
     "openai-gpt-token-counter": "^1.1.0",
+    "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",

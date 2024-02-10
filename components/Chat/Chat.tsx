@@ -1,6 +1,3 @@
-import Swal, { SweetAlertOptions } from 'sweetalert2'
-import { ProcessPayment } from '../Payments/LightningPayments';
-import { processInput } from '../Payments/processInput';
 import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import {
   MutableRefObject,
@@ -28,24 +25,34 @@ import { Plugin } from '@/types/plugin';
 
 import HomeContext from '@/pages/api/home/home.context';
 
+import { useWeblnInitializer } from '../../components/Payments/ProcessBCPayment';
+import { PaymentProcessing } from '@/components/Payments/PaymentProcessing';
+
+import {
+  defaultModel,
+  getModelById,
+  getModelNameById,
+} from '../../controller/modelDetails';
+
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
+import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
-import { MemoizedChatMessage } from './MemoizedChatMessage';
 
-import { defaultModel, getModelById, getModelNameById } from '../../controller/modelDetails';
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
 }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
+  useWeblnInitializer();
   const { t } = useTranslation('chat');
-  const savedModel = localStorage.getItem("saved-model") || ""
+  const savedModel = localStorage.getItem('saved-model') || '';
 
   const {
     state: {
@@ -76,14 +83,15 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
-      const paymentInProgess: string | null = localStorage.getItem('pay-progress')
+      const paymentInProgess: string | null =
+        localStorage.getItem('pay-progress');
       if (paymentInProgess) {
         Swal.fire({
-          icon: "warning",
-          title: "Payment in process",
-          text: "Please wait until your payment is complete before trying another query.",
-          confirmButtonColor: "#202123"
-        })
+          icon: 'warning',
+          title: 'Payment in process',
+          text: 'Please wait until your payment is complete before trying another query.',
+          confirmButtonColor: '#202123',
+        });
         return;
       }
 
@@ -118,27 +126,37 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           temperature: updatedConversation.temperature,
         };
         const endpoint = getEndpoint(plugin);
-        let body;
+        let body: string;
         if (!plugin) {
           body = JSON.stringify(chatBody);
+
           //Process payment
-          const invoice = await processInput(body);
-          if (invoice) {
-            localStorage.setItem('invoice', invoice); // Storing the invoice in local storage
-          } else {
-            // Handle the case where invoice is null or undefined
-            console.error('Invoice is not generated');
+          let response;
+          response = await PaymentProcessing(body);
+          console.log('response', response);
+          if (response === undefined) {
           }
-          
-          const payment = await ProcessPayment(invoice);
-          const error = payment.error
-          
-          if (!payment.payment) {
-            Swal.fire(error);
-            localStorage.removeItem("pay-progress")
+          else if (response === 'bought credit') {
+            response = await PaymentProcessing(body);
+          }
+          else if (response === 'cancelled') {
+            //This is hacky way to solve 'stop generating' issue.
+            window.location.reload();
             return;
           }
-          //End process payment
+          else if (response === 'lump sum payment'){
+
+          }
+          else if (response === 'alby payment complete') {
+
+          }
+          else if (response === 'Insufficient credit') {
+            console.log('error');
+            return;
+          }
+
+
+          // //End process payment
         } else {
           body = JSON.stringify({
             ...chatBody,
@@ -279,7 +297,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'messageIsStreaming', value: false });
         }
       }
-      localStorage.removeItem("pay-progress")
+      localStorage.removeItem('pay-progress');
     },
     [
       apiKey,
@@ -455,8 +473,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             ) : (
               <>
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                  {t('Model')}: {getModelNameById(localStorage.getItem("saved-model") || "") || getModelNameById(defaultModel)}
-                   {" | "}
+                  {t('Model')}:{' '}
+                  {getModelNameById(
+                    localStorage.getItem('saved-model') || '',
+                  ) || getModelNameById(defaultModel)}
+                  {' | '}
                   <button
                     className="ml-2 cursor-pointer hover:opacity-50"
                     onClick={handleSettings}
