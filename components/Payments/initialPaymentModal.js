@@ -62,12 +62,14 @@ export const initialPaymentModal = async (credit_id) => {
         });
 
         // Initialize WebSocket connection
-        // Assuming NEXT_PUBLIC_API_URL is something like "http://localhost:PORT"
+        
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        console.log('API URL:', apiUrl)
         const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const wsHost = apiUrl.replace(/^(http:|https:)?\/\//, '');
         const wsUrl = `${wsProtocol}//${wsHost}`;
         const ws = new WebSocket(wsUrl);
+        console.log('WebSocket URL:', wsUrl);
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
