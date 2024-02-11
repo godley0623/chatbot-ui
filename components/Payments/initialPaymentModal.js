@@ -1,11 +1,23 @@
 import Swal from 'sweetalert2';
 import { retrieveLumpSumInvoice } from './retrieveLumpSumInvoice';
 import QRCode from 'qrcode';
+import Pusher from 'pusher-js';
+
+// At the top of your file, after imports
+Pusher.logToConsole = true;
+
+const NEXT_PUBLIC_CLUSTER = process.env.NEXT_PUBLIC_CLUSTER;
+const NEXT_PUBLIC_PUSHER_APP_KEY = process.env.NEXT_PUBLIC_PUSHER_APP_KEY;
+
+const pusher = new Pusher(NEXT_PUBLIC_PUSHER_APP_KEY, {
+  cluster: NEXT_PUBLIC_CLUSTER
+});
 
 // Assuming you have a way to determine the current theme mode
 const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export const initialPaymentModal = async (credit_id) => {
+
     let invoice = await retrieveLumpSumInvoice(credit_id);
     let qrCodeDataURL;
     try {
@@ -18,6 +30,14 @@ export const initialPaymentModal = async (credit_id) => {
     const swalButtonColor = '#3085d6'; // Example button color, adjust as needed
 
     return new Promise((resolve) => {
+
+        const channel = pusher.subscribe('payment-channel');
+        channel.bind('payment-event', function(data) {
+          if (data.invoice === invoice && data.status === 'confirmed') {
+            resolve({ choice: 'bought credit', credit_id: data.credit_id });
+            Swal.close();
+          }
+        });
         Swal.fire({
             title: 'Choose Payment Method',
             html: `
@@ -60,30 +80,6 @@ export const initialPaymentModal = async (credit_id) => {
                 resolve('cancelled');
             }
         });
-
-        // Initialize WebSocket connection
-        
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        console.log('API URL:', apiUrl)
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsHost = apiUrl.replace(/^(http:|https:)?\/\//, '');
-        const wsUrl = `${wsProtocol}//${wsHost}`;
-        const ws = new WebSocket(wsUrl);
-        console.log('WebSocket URL:', wsUrl);
-
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.invoice === invoice && data.status === 'confirmed') {
-                resolve({ choice: 'bought credit', credit_id: data.credit_id });
-                ws.close();
-                Swal.close();
-
-            }
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
 
         // Button event listeners
         document.getElementById('pay-with-alby')?.addEventListener('click', async () => {
