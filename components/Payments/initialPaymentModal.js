@@ -3,9 +3,6 @@ import { retrieveLumpSumInvoice } from './retrieveLumpSumInvoice';
 import QRCode from 'qrcode';
 import Pusher from 'pusher-js';
 
-// At the top of your file, after imports
-Pusher.logToConsole = true;
-
 const NEXT_PUBLIC_CLUSTER = process.env.NEXT_PUBLIC_CLUSTER;
 const NEXT_PUBLIC_PUSHER_APP_KEY = process.env.NEXT_PUBLIC_PUSHER_APP_KEY;
 

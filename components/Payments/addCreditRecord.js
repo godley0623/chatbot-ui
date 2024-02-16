@@ -12,6 +12,7 @@ export const addCreditRecord = async (new_credit_id, price_in_sats)  => {
             body: JSON.stringify({ new_credit_id, price_in_sats })
         });
         const isSuccessful = await response.text();
+        console.log('isSuccessful:', isSuccessful);
         return isSuccessful;
 
     } catch (error) {
