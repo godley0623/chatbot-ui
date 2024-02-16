@@ -27,6 +27,10 @@ export const PaymentProcessing = async (body) => {
       else if (user_choice.choice === 'bought credit') {
         credit_id = user_choice.credit_id;
         localStorage.setItem('credit_id', credit_id);
+        window.dispatchEvent(new CustomEvent('localStorageChange', { detail: { 'credit_id': credit_id } }));
+
+
+        
         return user_choice.choice;
       }
     }
@@ -45,6 +49,7 @@ export const PaymentProcessing = async (body) => {
     invoice = response.payment_request;
     new_credit_id = response.new_credit_id;
     localStorage.setItem('credit_id', new_credit_id);
+    window.dispatchEvent(new CustomEvent('localStorageChange', { detail: { 'credit_id': new_credit_id } }));
 
     // Process the payment depending on whether or not the user is making first payment or is pulling from credit and making asynch payment.
     let payment;
@@ -52,7 +57,7 @@ export const PaymentProcessing = async (body) => {
       console.log('ProcessPayment executed');
       payment = await ProcessPayment(invoice);
       if (payment.payment) {
-        addCreditRecord(new_credit_id, response.price_in_sats);
+        await addCreditRecord(new_credit_id, response.price_in_sats);
         console.log('addCreditRecord complete');
         return 'alby payment complete'
       }
