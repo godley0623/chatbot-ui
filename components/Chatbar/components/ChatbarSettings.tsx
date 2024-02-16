@@ -17,7 +17,7 @@ import { IconQuestion } from './IconQuestion';
 import { PluginKeys } from './PluginKeys';
 
 import Swal from 'sweetalert2';
-import accountIDModal from '../../Payments/AccountIDModal';
+import accountIDModal from '../../Payments/accountIDModal';
 
 //This is a custom event that will be dispatched when a change is made to localStorage. It works with the account ID to update the UI in real-time.
 interface LocalStorageChangeEventDetail {
