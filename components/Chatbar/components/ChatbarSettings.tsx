@@ -80,8 +80,8 @@ export const ChatbarSettings = () => {
 
   const toggleModal = () => setShowModal(!showModal);
 
-  const [accountId, setAccountId] = useState('Not Set');
-  const [fullCreditId, setFullCreditId] = useState('Not Set');
+  const [accountId, setAccountId] = useState('N/A');
+  const [fullCreditId, setFullCreditId] = useState('N/A');
 
   useEffect(() => {
     const handleLocalStorageChange = (event: CustomEvent<LocalStorageChangeEventDetail>) => {
