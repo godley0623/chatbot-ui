@@ -370,7 +370,7 @@ const Home = ({
       }}
     >
       <Head>
-        <title>BitsForBoops</title>
+        <title>PayPerQ</title>
         
         <meta name="description" content="ChatGPT but better." />
         <meta
