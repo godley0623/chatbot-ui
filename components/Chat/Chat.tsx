@@ -135,6 +135,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           response = await PaymentProcessing(body);
           console.log('response', response);
           if (response === undefined) {
+            return;
           }
           else if (response === 'bought credit') {
             response = await PaymentProcessing(body);

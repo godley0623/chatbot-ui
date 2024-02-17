@@ -5,6 +5,7 @@ import { addCreditRecord } from './addCreditRecord';
 import { initialPaymentModal } from './initialPaymentModal';
 import { InsufficientCreditModal } from './insufficientCreditModal';
 import { processInput } from './processInput';
+
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 export const PaymentProcessing = async (body) => {
@@ -27,10 +28,12 @@ export const PaymentProcessing = async (body) => {
       else if (user_choice.choice === 'bought credit') {
         credit_id = user_choice.credit_id;
         localStorage.setItem('credit_id', credit_id);
-        window.dispatchEvent(new CustomEvent('localStorageChange', { detail: { 'credit_id': credit_id } }));
+        window.dispatchEvent(
+          new CustomEvent('localStorageChange', {
+            detail: { credit_id: credit_id },
+          }),
+        );
 
-
-        
         return user_choice.choice;
       }
     }
@@ -42,14 +45,18 @@ export const PaymentProcessing = async (body) => {
     }
     console.log('response:', response);
     //Check Insufficient credit
-    if (response.error === "Insufficient credit") {
+    if (response.error === 'Insufficient credit') {
       let user_choice = await InsufficientCreditModal();
       return user_choice.choice;
     }
     invoice = response.payment_request;
     new_credit_id = response.new_credit_id;
     localStorage.setItem('credit_id', new_credit_id);
-    window.dispatchEvent(new CustomEvent('localStorageChange', { detail: { 'credit_id': new_credit_id } }));
+    window.dispatchEvent(
+      new CustomEvent('localStorageChange', {
+        detail: { credit_id: new_credit_id },
+      }),
+    );
 
     // Process the payment depending on whether or not the user is making first payment or is pulling from credit and making asynch payment.
     let payment;
@@ -59,7 +66,7 @@ export const PaymentProcessing = async (body) => {
       if (payment.payment) {
         await addCreditRecord(new_credit_id, response.price_in_sats);
         console.log('addCreditRecord complete');
-        return 'alby payment complete'
+        return 'alby payment complete';
       }
     }
     if (credit_id !== null) {
@@ -76,6 +83,7 @@ export const PaymentProcessing = async (body) => {
           console.error('Error in ProcessPayment:', error);
           // Handle error or do nothing if you only want to proceed on success
         });
+      return 'alby payment complete';
     }
   } catch (error) {
     console.error('Error in PaymentProcessing:', error);
