@@ -1,4 +1,4 @@
-export const retrieveLumpSumInvoice = async (credit_id) => {
+export const retrieveLumpSumInvoice = async (credit_id, fiat_amount) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
         const response = await fetch(`${API_URL}/retrieveLumpSumInvoice`, {
@@ -6,7 +6,7 @@ export const retrieveLumpSumInvoice = async (credit_id) => {
             headers: {
                 'Content-Type': 'application/json' // Specify that we're sending JSON
             },
-            body: JSON.stringify({ credit_id })
+            body: JSON.stringify({ credit_id, fiat_amount })
         });
 
         const invoice = await response.text();
