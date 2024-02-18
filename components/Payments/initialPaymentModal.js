@@ -15,7 +15,9 @@ const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-
 
 export const initialPaymentModal = async (credit_id) => {
 
-    let invoice = await retrieveLumpSumInvoice(credit_id);
+    let default_invoice_value = "0.10"
+
+    let invoice = await retrieveLumpSumInvoice(credit_id, default_invoice_value);
     let qrCodeDataURL;
     try {
         qrCodeDataURL = await QRCode.toDataURL(invoice); // Ensure this uses the invoice's unique identifier
@@ -52,7 +54,7 @@ export const initialPaymentModal = async (credit_id) => {
             <br>
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
                 <label for="user-input-field" style="margin-right: 10px; white-space: nowrap;">Amount:</label>
-                <input type="text" id="user-input-field" value="$0.10" style="width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #e0e0e0;" readonly>
+                <input type="text" id="user-input-field" value="$0.10" style="width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #e0e0e0;">
             </div>
             <div style="margin-top: 10px;">
                 <img src="${qrCodeDataURL}" alt="QR Code" style="margin: auto; display: block;"/>
@@ -77,6 +79,78 @@ export const initialPaymentModal = async (credit_id) => {
                 resolve('cancelled');
             }
         });
+
+// Debounce function
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+document.getElementById('user-input-field')?.addEventListener('input', debounce(async (event) => {
+    let inputField = event.target;
+    let value = inputField.value.trim(); // Trim whitespace
+
+    // Ensure the input starts with $ and is in correct format
+    if (!value.startsWith('$')) {
+        value = '$' + value.slice(1);
+    }
+    value = value.replace(/[^0-9.]+/g, '');
+    let decimalIndex = value.indexOf('.');
+    if (decimalIndex !== -1) {
+        value = value.slice(0, decimalIndex) + '.' + value.slice(decimalIndex + 1).replace(/\./g, '');
+    }
+
+    // Check if the input field is empty or only contains the '$' sign, then reset it to default_invoice_value
+    if (value === '$' || value === '') {
+        value = `$${default_invoice_value}`; // Reset to default value
+    }
+    
+    inputField.value = value.startsWith('$') ? value : '$' + value;
+
+    // Convert the value to a number and check if it exceeds $2
+    let numericValue = parseFloat(inputField.value.substring(1));
+    let warningTextId = 'warning-text';
+    let warningText = document.getElementById(warningTextId);
+
+    if (numericValue > 2) {
+        // Set the value to $2.00
+        inputField.value = '$2.00';
+        // Display a warning message below the input field
+        if (!warningText) {
+            warningText = document.createElement('div');
+            warningText.id = warningTextId;
+            warningText.textContent = 'Account credits over $2 are not allowed during beta.';
+            warningText.style.color = 'red';
+            warningText.style.marginTop = '5px'; // Adjust spacing as needed
+            // Append the warning message as a sibling element below the input field
+            inputField.parentNode.appendChild(warningText);
+        }
+    } else {
+        // Remove the warning message if the value is now valid
+        if (warningText) {
+            warningText.remove();
+        }
+    }
+
+    // Proceed with the debounced logic to update the invoice and QR code
+    try {
+        invoice = await retrieveLumpSumInvoice(credit_id, inputField.value.substring(1));
+        qrCodeDataURL = await QRCode.toDataURL(invoice);
+        document.querySelector('img[alt="QR Code"]').src = qrCodeDataURL;
+    } catch (error) {
+        console.error('Error updating QR code:', error);
+    }
+}, 750));
+
+
+
+
+
+        
 
         // Button event listeners
         document.getElementById('pay-with-alby')?.addEventListener('click', async () => {
