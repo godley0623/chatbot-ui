@@ -133,7 +133,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           //Process payment
           let response;
           response = await PaymentProcessing(body);
-          console.log('response', response);
+          console.log('chat.tsx response', response);
           if (response === undefined) {
             return;
           }
