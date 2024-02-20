@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { retrieveLumpSumInvoice } from './retrieveLumpSumInvoice';
+
 import QRCode from 'qrcode';
 import Pusher from 'pusher-js';
 
@@ -154,8 +155,13 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
 
         // Button event listeners
         document.getElementById('pay-with-alby')?.addEventListener('click', async () => {
-            resolve('pay with alby');
-            Swal.close();
+            if (!window.webln) {
+                resolve('alby not detected')
+            } else {
+                resolve('pay with alby');
+                Swal.close();
+            }
+
         });
 
         document.getElementById('copy-invoice')?.addEventListener('click', () => {

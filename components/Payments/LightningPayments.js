@@ -1,3 +1,5 @@
+
+
 let errorBody;
 
 export const ProcessPayment = async (invoice) => {
@@ -8,6 +10,7 @@ export const ProcessPayment = async (invoice) => {
 
 const requestPayment = async (invoice) => {
   try {
+    console.log('window.webln:', window.webln);
     if (typeof window.webln !== 'undefined') {
       await window.webln.enable();
     }

@@ -5,7 +5,7 @@ import { addCreditRecord } from './addCreditRecord';
 import { initialPaymentModal } from './initialPaymentModal';
 import { InsufficientCreditModal } from './insufficientCreditModal';
 import { processInput } from './processInput';
-
+import { albyNotDetected } from './albyNotDetectedModal';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 export const PaymentProcessing = async (body) => {
@@ -17,12 +17,18 @@ export const PaymentProcessing = async (body) => {
     //if credit_id is null, then this is the first payment and should proceed with initial payment modal to let user set up their payment method
     if (credit_id === null) {
       let user_choice = await initialPaymentModal(credit_id);
+      console.log('paymentprocessing user_choice:', user_choice);
       if (user_choice === 'pay with alby') {
         console.log('User chose to pay with alby');
       }
       //If user hits cancel button in payment modal
       if (user_choice === 'cancelled') {
         return user_choice;
+      }
+      else if (user_choice === 'alby not detected') {
+        console.log('alby not detected');
+        await albyNotDetected();
+        return 'alby not detected';
       }
       //If user pays lump sum invoice
       else if (user_choice.choice === 'bought credit') {

@@ -140,6 +140,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           else if (response === 'bought credit') {
             response = await PaymentProcessing(body);
           }
+          else if (response === 'alby not detected') {
+            while (response === 'alby not detected') {
+              response = await PaymentProcessing(body);
+            }
+          }
           else if (response === 'cancelled') {
             //This is hacky way to solve 'stop generating' issue.
             window.location.reload();
