@@ -1,4 +1,4 @@
-import { IconFileExport, IconSettings } from '@tabler/icons-react';
+import { IconExclamationCircle, IconFileExport, IconSettings } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
@@ -76,6 +76,74 @@ export const ChatbarSettings = () => {
     });
   };
 
+  const handleHelpMeOut = () => {
+    Swal.fire({
+      title: 'Feedback / Support',
+      html: `
+        <div style="text-align: left;">
+          <!-- Start of formatted content -->
+          <p>I want PayPerQ to become the default ChatGPT experience for Bitcoin adjacent developers and professionals around the world.</p>
+          <br>
+          <p>What would it take for this to become your primary daily GPT interface?</p>
+          <br>
+          <p>Please let me know what we can do to get you to that point!</p>
+          <!-- End of formatted content -->
+        </div>
+        <!-- Centered Telegram, Email, and Twitter buttons at the bottom -->
+        <div style="text-align: center; padding-top: 20px;">
+          <!-- Email Icon/Button -->
+          <a
+            id="email-btn"
+            style="display: inline-block; margin-right: 10px; cursor: pointer;"
+          >
+            <img src="/email-logo.png" alt="Email" style="width: 30px; height: 30px;">
+          </a>
+          <!-- Twitter Icon/Button -->
+          <a
+            href="https://twitter.com/PPQdotAI"
+            target="_blank"
+            id="twitter-btn"
+            style="display: inline-block; margin-right: 10px;"
+          >
+            <img src="/twitter-logo.png" alt="Twitter" style="width: 30px; height: 30px;">
+          </a>
+          <!-- Telegram Icon/Button -->
+          <a
+            href="https://t.me/+ZjJDTazIrV0zNDFh"
+            target="_blank"
+            id="telegram-btn"
+            style="display: inline-block;"
+          >
+            <img src="/telegram-logo.svg" alt="Telegram" style="width: 30px; height: 30px;">
+          </a>
+        </div>`,
+        icon: 'info',
+        confirmButtonColor: '#202123',
+        didRender: () => {
+          const emailBtn = document.getElementById('email-btn');
+          if (emailBtn) {
+            emailBtn.addEventListener('click', (event) => {
+              event.preventDefault();
+              const email = 'matt.ahlborg@gmail.com'; // Set the email address to be copied
+              navigator.clipboard.writeText(email).then(() => {
+                Swal.fire({ // Display the notification
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  icon: 'success',
+                  title: 'Email address copied to clipboard!',
+                });
+              }).catch(err => {
+                console.error('Could not copy text: ', err);
+              });
+            });
+          }
+        }
+      });
+  };
+
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => setShowModal(!showModal);
@@ -130,6 +198,11 @@ export const ChatbarSettings = () => {
         text={t('About')}
         icon={<IconAbout />}
         onClick={() => handleAbout()}
+      />
+      <SidebarButton
+        text={t('Feedback / Support')}
+        icon={<IconExclamationCircle size={18} />}
+        onClick={() => handleHelpMeOut()}
       />
 
       <SidebarButton
