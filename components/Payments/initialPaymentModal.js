@@ -14,6 +14,10 @@ const pusher = new Pusher(NEXT_PUBLIC_PUSHER_APP_KEY, {
 // Assuming you have a way to determine the current theme mode
 const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
+
 export const initialPaymentModal = async (credit_id) => {
 
     let default_invoice_value = "0.10"
@@ -21,13 +25,58 @@ export const initialPaymentModal = async (credit_id) => {
     let invoice = await retrieveLumpSumInvoice(credit_id, default_invoice_value);
     let qrCodeDataURL;
     try {
-        qrCodeDataURL = await QRCode.toDataURL(invoice); // Ensure this uses the invoice's unique identifier
+        qrCodeDataURL = await QRCode.toDataURL(invoice); //Ensure this uses the invoice's unique identifier
     } catch (error) {
         console.error('Error generating QR code:', error);
         return;
     }
-
-    const swalButtonColor = '#3085d6'; // Example button color, adjust as needed
+    const onMobileDevice = isMobileDevice();
+    let htmlContent;
+    //Do conditional rendering of Alby based on if mobile or not
+    if (!onMobileDevice) {
+        htmlContent = `
+        <p style="text-align: center; font-size: 1.2em;">1. Buy credit via Lightning Invoice</p>
+        <br>
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <label for="user-input-field" style="margin-right: 10px; white-space: nowrap;">Amount:</label>
+            <input type="text" id="user-input-field" value="$0.10" style="width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #e0e0e0;">
+        </div>
+        <div style="margin-top: 1px;">
+            <img src="${qrCodeDataURL}" alt="QR Code" style="margin: auto; display: block;"/>
+            <br>
+            <button id="copy-invoice" class="swal2-styled" style="background-color: #7CBDF5; color: white; border-radius: 5px;">Copy Invoice</button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+            <hr style="flex: 1; height: 1px; background-color: #ccc; border: none;">
+            <h1 style="flex: 0 1 auto; padding: 0 20px; font-size: 2em; margin: 0;">OR</h1>
+            <hr style="flex: 1; height: 1px; background-color: #ccc; border: none;">
+        </div>
+        <p style="text-align: center; font-size: 1.2em;">2. Streaming Payments via Connected Wallet</p>
+        <div style="text-align: center; margin-bottom: 10px;">
+            <img src="https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png" alt="Alby Logo" style="max-width: 100px; display: block; margin-left: auto; margin-right: auto;">
+        </div>
+        <button id="pay-with-alby" class="swal2-styled" style="background-color: #7CBDF5; color: white; border-radius: 5px; display: block; width: fit-content; margin: 0 auto;">Pay with Alby</button>
+        
+        `;
+    } else {
+        
+        htmlContent = `
+        <p style="text-align: center; font-size: 1.2em;">Buy credit via Lightning Invoice</p>
+        <br>
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <label for="user-input-field" style="margin-right: 10px; white-space: nowrap;">Amount:</label>
+            <input type="text" id="user-input-field" value="$0.10" style="width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #e0e0e0;">
+        </div>
+        <div style="margin-top: 1px;">
+            <img src="${qrCodeDataURL}" alt="QR Code" style="margin: auto; display: block;"/>
+            <br>
+            <button id="copy-invoice" class="swal2-styled" style="background-color: #7CBDF5; color: white; border-radius: 5px;">Copy Invoice</button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+        </div>
+        
+        `;
+    }
 
     return new Promise((resolve) => {
 
@@ -39,32 +88,8 @@ export const initialPaymentModal = async (credit_id) => {
           }
         });
         Swal.fire({
-            title: 'Choose Payment Method',
-            html: `
-            <p style="text-align: center; font-size: 1.2em;">1. Streaming Payments via Connected Wallet</p>
-            <div style="text-align: center; margin-bottom: 10px;">
-                <img src="https://d4.alternativeto.net/wbw0Br9Q0qwY4-kY0h2eR0uVx6i-jBza8accEf1Up1A/rs:fill:280:280:0/g:ce:0:0/YWJzOi8vZGlzdC9pY29ucy9hbGJ5XzIxMzMyNS5wbmc.png" alt="Alby Logo" style="max-width: 100px; display: block; margin-left: auto; margin-right: auto;">
-            </div>
-            <button id="pay-with-alby" class="swal2-styled" style="background-color: #3085d6; display: block; width: fit-content; margin: 0 auto;">Pay with Alby</button>
-            <div style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
-                <hr style="flex: 1; height: 1px; background-color: #ccc; border: none;">
-                <h1 style="flex: 0 1 auto; padding: 0 20px; font-size: 2em; margin: 0;">OR</h1>
-                <hr style="flex: 1; height: 1px; background-color: #ccc; border: none;">
-            </div>
-            <p style="text-align: center; font-size: 1.2em;">2. Buy credit via Lightning Invoice</p>
-            <br>
-            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                <label for="user-input-field" style="margin-right: 10px; white-space: nowrap;">Amount:</label>
-                <input type="text" id="user-input-field" value="$0.10" style="width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #e0e0e0;">
-            </div>
-            <div style="margin-top: 10px;">
-                <img src="${qrCodeDataURL}" alt="QR Code" style="margin: auto; display: block;"/>
-                <br>
-                <button id="copy-invoice" class="swal2-styled" style="background-color: #3085d6;">Copy Invoice</button>
-            </div>
-
-            
-            `,
+            title: 'Select Payment Method',
+            html: htmlContent,
             showConfirmButton: false,
             showCancelButton: true,
             cancelButtonText: 'Cancel',

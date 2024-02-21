@@ -102,6 +102,19 @@ const Home = ({
   }, [])
 
   useEffect(() => {
+    const checkLocalStorageVariable = () => {
+      const myVariable = localStorage.getItem('myLocalStorageVariable');
+      if (myVariable !== null) {
+        console.log(`Value of myLocalStorageVariable: ${myVariable}`);
+      }
+    };
+  
+    checkLocalStorageVariable();
+  
+    // You can call additional functions here if necessary
+  }, []);
+
+  useEffect(() => {
     if (data) dispatch({ field: 'models', value: data });
   }, [data, dispatch]);
 

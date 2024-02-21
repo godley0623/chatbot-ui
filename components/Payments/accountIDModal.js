@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import { getCreditIdBalance } from './getCreditIdBalance';
 
 const accountIDModal = (accountId, fullCreditId) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -6,11 +7,11 @@ const accountIDModal = (accountId, fullCreditId) => {
   return async () => { // Make this function async
     try {
       // Fetch the account data from your backend
-      const response = await fetch(`${API_URL}/accountData/${fullCreditId}`);
+      const response = await getCreditIdBalance(fullCreditId);
+      console.log('accountIDModal response:', response);
       if (response.ok) {
         const accountData = await response.json();
         console.log('accountData:', accountData);
-
         // Now use the retrieved data in your modal
         Swal.fire({
           title: 'Account ID',
