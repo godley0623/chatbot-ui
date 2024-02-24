@@ -44,7 +44,7 @@ export const PaymentProcessing = async (body) => {
       }
     }
     //processInput
-    let invoice;
+    let invoiceData;
     let response = await processInput(body, credit_id);
     if (typeof response === 'string') {
       response = JSON.parse(response);
@@ -55,7 +55,8 @@ export const PaymentProcessing = async (body) => {
       let user_choice = await InsufficientCreditModal();
       return user_choice.choice;
     }
-    invoice = response.payment_request;
+    invoiceData = response.invoiceData;
+    console.log('invoiceData', invoiceData)
     new_credit_id = response.new_credit_id;
     localStorage.setItem('credit_id', new_credit_id);
     window.dispatchEvent(
@@ -68,7 +69,7 @@ export const PaymentProcessing = async (body) => {
     let payment;
     if (credit_id === null) {
       console.log('ProcessPayment executed');
-      payment = await ProcessPayment(invoice);
+      payment = await ProcessPayment(invoiceData);
       if (payment.payment) {
         await addCreditRecord(new_credit_id, response.price_in_sats);
         console.log('addCreditRecord complete');
@@ -80,7 +81,7 @@ export const PaymentProcessing = async (body) => {
         return 'lump sum payment';
       }
       console.log('ProcessPayment executed');
-      ProcessPayment(invoice)
+      ProcessPayment(invoiceData)
         .then(() => {
           console.log('addCreditByCreditId executed');
           addCreditByCreditId(new_credit_id, response.price_in_sats);

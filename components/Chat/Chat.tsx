@@ -135,7 +135,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           response = await PaymentProcessing(body);
           console.log('chat.tsx response', response);
           if (response === undefined) {
-            window.location.reload();
+            //window.location.reload();
             return;
           }
           else if (response === 'bought credit') {

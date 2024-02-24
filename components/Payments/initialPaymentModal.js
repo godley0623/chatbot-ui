@@ -81,8 +81,10 @@ export const initialPaymentModal = async (credit_id) => {
     return new Promise((resolve) => {
 
         const channel = pusher.subscribe('payment-channel');
+
         channel.bind('payment-event', function(data) {
           if (data.invoice === invoice && data.status === 'confirmed') {
+            console.log('websocket notifcation received!')
             resolve({ choice: 'bought credit', credit_id: data.credit_id });
             Swal.close();
           }
