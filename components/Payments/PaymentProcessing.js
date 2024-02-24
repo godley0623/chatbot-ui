@@ -69,7 +69,7 @@ export const PaymentProcessing = async (body) => {
     let payment;
     if (credit_id === null) {
       console.log('ProcessPayment executed');
-      payment = await ProcessPayment(invoiceData);
+      payment = await ProcessPayment(invoiceData.payment_request);
       if (payment.payment) {
         await addCreditRecord(new_credit_id, response.price_in_sats);
         console.log('addCreditRecord complete');
@@ -81,7 +81,7 @@ export const PaymentProcessing = async (body) => {
         return 'lump sum payment';
       }
       console.log('ProcessPayment executed');
-      ProcessPayment(invoiceData)
+      ProcessPayment(invoiceData.payment_request)
         .then(() => {
           console.log('addCreditByCreditId executed');
           addCreditByCreditId(new_credit_id, response.price_in_sats);

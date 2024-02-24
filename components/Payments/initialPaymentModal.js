@@ -3,6 +3,7 @@ import { retrieveLumpSumInvoice } from './retrieveLumpSumInvoice';
 
 import QRCode from 'qrcode';
 import Pusher from 'pusher-js';
+import { startCheckingPayment } from './checkPaymentComplete';
 
 const NEXT_PUBLIC_CLUSTER = process.env.NEXT_PUBLIC_CLUSTER;
 const NEXT_PUBLIC_PUSHER_APP_KEY = process.env.NEXT_PUBLIC_PUSHER_APP_KEY;
@@ -22,10 +23,13 @@ export const initialPaymentModal = async (credit_id) => {
 
     let default_invoice_value = "0.10"
 
-    let invoice = await retrieveLumpSumInvoice(credit_id, default_invoice_value);
+    let invoiceData = await retrieveLumpSumInvoice(credit_id, default_invoice_value);
+    invoiceData = JSON.parse(invoiceData);
+    startCheckingPayment(invoiceData.payment_hash, invoiceData.payment_request, credit_id);
+
     let qrCodeDataURL;
     try {
-        qrCodeDataURL = await QRCode.toDataURL(invoice); //Ensure this uses the invoice's unique identifier
+        qrCodeDataURL = await QRCode.toDataURL(invoiceData.payment_request);
     } catch (error) {
         console.error('Error generating QR code:', error);
         return;
@@ -83,7 +87,7 @@ export const initialPaymentModal = async (credit_id) => {
         const channel = pusher.subscribe('payment-channel');
 
         channel.bind('payment-event', function(data) {
-          if (data.invoice === invoice && data.status === 'confirmed') {
+          if (data.status === 'confirmed') {
             console.log('websocket notifcation received!')
             resolve({ choice: 'bought credit', credit_id: data.credit_id });
             Swal.close();
@@ -166,8 +170,8 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
 
     // Proceed with the debounced logic to update the invoice and QR code
     try {
-        invoice = await retrieveLumpSumInvoice(credit_id, inputField.value.substring(1));
-        qrCodeDataURL = await QRCode.toDataURL(invoice);
+        invoiceData = await retrieveLumpSumInvoice(credit_id, inputField.value.substring(1));
+        qrCodeDataURL = await QRCode.toDataURL(invoiceData.payment_request);
         document.querySelector('img[alt="QR Code"]').src = qrCodeDataURL;
     } catch (error) {
         console.error('Error updating QR code:', error);
@@ -187,7 +191,7 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
         });
 
         document.getElementById('copy-invoice')?.addEventListener('click', () => {
-            navigator.clipboard.writeText(invoice).then(() => {
+            navigator.clipboard.writeText(invoiceData.payment_request).then(() => {
                 Swal.showValidationMessage('Copied to clipboard');
             }).catch(err => {
                 console.error('Error copying to clipboard', err);
