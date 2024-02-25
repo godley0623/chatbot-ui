@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { retrieveLumpSumInvoice } from './retrieveLumpSumInvoice';
+import { lostCreditWarningModal } from './lostCreditWarningModal';
 
 import QRCode from 'qrcode';
 import Pusher from 'pusher-js';
@@ -91,6 +92,7 @@ export const initialPaymentModal = async (credit_id) => {
             console.log('websocket notifcation received!')
             resolve({ choice: 'bought credit', credit_id: data.credit_id });
             Swal.close();
+            lostCreditWarningModal();
           }
         });
         Swal.fire({
@@ -186,6 +188,7 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
             } else {
                 resolve('pay with alby');
                 Swal.close();
+                lostCreditWarningModal();
             }
 
         });
