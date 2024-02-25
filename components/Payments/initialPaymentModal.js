@@ -173,7 +173,10 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
     // Proceed with the debounced logic to update the invoice and QR code
     try {
         invoiceData = await retrieveLumpSumInvoice(credit_id, inputField.value.substring(1));
+        invoiceData = JSON.parse(invoiceData);
         qrCodeDataURL = await QRCode.toDataURL(invoiceData.payment_request);
+        console.log(inputField.value.substring(1));
+        console.log(invoiceData);
         document.querySelector('img[alt="QR Code"]').src = qrCodeDataURL;
     } catch (error) {
         console.error('Error updating QR code:', error);

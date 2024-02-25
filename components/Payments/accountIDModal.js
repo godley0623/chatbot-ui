@@ -2,22 +2,58 @@ import Swal from 'sweetalert2';
 import { getCreditIdBalance } from './getCreditIdBalance';
 
 const accountIDModal = (accountId, fullCreditId) => {
-  return async () => { // The function is now async
+  return async () => {
     try {
-      // Fetch the account data from your backend
-      const accountData = await getCreditIdBalance(fullCreditId);
-      console.log('accountIDModal response:', accountData);
+      const { creditRecord, queryMetadataRecords } = await getCreditIdBalance(fullCreditId);
 
-      if (accountData.error) {
-        throw new Error(accountData.error);
+      if (!creditRecord) {
+        throw new Error('No account data found');
       }
 
-      console.log('accountData:', accountData.creditRecord);
-      // Now use the retrieved data in your modal
+      // Sort the records in descending order by timestamp (most recent first)
+      queryMetadataRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+
+      let queryRecordsHtml = '';
+      queryMetadataRecords.forEach(record => {
+        const dateOptions = { month: 'short', day: '2-digit' }; // Month as abbreviated name, day as two digits
+        const timeOptions = { hour: '2-digit', minute: '2-digit' }; // Include AM/PM for 12-hour cycle based on the locale
+        const formattedDate = new Date(record.timestamp).toLocaleDateString('en-US', dateOptions);
+        const formattedTime = new Date(record.timestamp).toLocaleTimeString('en-US', timeOptions);
+
+        queryRecordsHtml += `
+          <tr>
+            <td style="padding: 0 10px;">${formattedDate} ${formattedTime}</td>
+            <td style="padding: 0 10px;">${record.input_count}</td>
+            <td style="padding: 0 10px;">${record.price_in_sats}</td>
+          </tr>`;
+      });
+
+      const htmlContent = `
+        <p>Your Account ID is: ${accountId}</p>
+        <br>
+        <p>Your balance is: ${creditRecord.amount} (Sats)</p>
+        <br>
+        <div style="width: 100%; display: flex; justify-content: center;">
+          <table style="border-collapse: separate; border-spacing: 0 10px;">
+            <thead>
+              <tr>
+                <th style="padding: 0 10px;">Timestamp</th>
+                <th style="padding: 0 10px;">Input Tokens</th>
+                <th style="padding: 0 10px;">Price (satoshis)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${queryRecordsHtml}
+            </tbody>
+          </table>
+        </div>`;
+
       Swal.fire({
-        title: 'Account ID',
-        html: `<p>Your Account ID is: ${accountId}</p>
-               <p>Balance (satoshis): ${accountData.creditRecord.amount}</p>`,
+        title: 'Account Info',
+        html: htmlContent,
+        width: '600px',
+        preConfirm: () => { }
       });
 
     } catch (error) {
