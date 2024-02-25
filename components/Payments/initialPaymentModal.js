@@ -174,6 +174,7 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
     try {
         invoiceData = await retrieveLumpSumInvoice(credit_id, inputField.value.substring(1));
         invoiceData = JSON.parse(invoiceData);
+        startCheckingPayment(invoiceData.payment_hash, invoiceData.payment_request, credit_id);
         qrCodeDataURL = await QRCode.toDataURL(invoiceData.payment_request);
         console.log(inputField.value.substring(1));
         console.log(invoiceData);
