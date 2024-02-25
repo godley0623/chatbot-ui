@@ -6,11 +6,6 @@ const injectCustomStyles = () => {
         .swal2-bottom-end-custom {
             bottom: 15vh !important; // Adjust vertical position using vh units
         }
-        .swal2-horizontal-custom {
-            min-width: 30vw !important; // Makes the modal wider, adjust as necessary
-            max-height: 10vh !important; // Makes the modal less tall, adjust as necessary
-            word-break: break-word; // Ensures words do not extend outside the modal
-        }
     `;
     document.head.appendChild(style);
 };
@@ -20,7 +15,7 @@ export const lostCreditWarningModal = async () => {
 
     try {
         const result = await Swal.fire({
-            position: 'bottom-end',
+            position: 'bottom',
             icon: 'warning',
             title: 'Warning',
             html: '<p>Your account credit ID has been placed in your browser history (local storage).</p>' + '<br>' +

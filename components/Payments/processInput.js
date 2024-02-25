@@ -1,8 +1,15 @@
+import  maxInput  from './maxInputHistory.js';
+
 export const processInput = async (body, credit_id) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+    body = JSON.parse(body);
+
+    let maxInputBody = await maxInput(body);
+    console.log('maxInput:', maxInputBody)
+
     let requestBody
-    requestBody = JSON.parse(body);
+    requestBody = body;
 
         // Add credit_id to the requestBody object
         requestBody.credit_id = credit_id;
