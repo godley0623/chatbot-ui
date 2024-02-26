@@ -15,7 +15,7 @@ export const lostCreditWarningModal = async () => {
 
     try {
         const result = await Swal.fire({
-            position: 'bottom',
+            position: 'center',
             icon: 'warning',
             title: 'Warning',
             html: '<p>Your account credit ID has been placed in your browser history (local storage).</p>' + '<br>' +

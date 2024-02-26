@@ -52,7 +52,7 @@ export const ChatbarSettings = () => {
       html: `
       <div style="text-align: left;">
         <!-- Start of formatted content -->
-        <p>PayPerQ is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring GPT4 access to more people globally. It was created by <a href="https://twitter.com/mattahlborg" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Matt Ahlborg</a>. If you have any questions or feedback, please reach out to Matt on Twitter.</p>
+        <p>PayPerQ is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring GPT4 access to more people globally. It was created by <a href="https://twitter.com/mattahlborg" target="_blank" rel="noopener" style="color: blue; text-decoration: underline;">Matt Ahlborg</a>.</p>
         <br></br>
         <!-- End of formatted content -->
       </div>`,
@@ -66,9 +66,9 @@ export const ChatbarSettings = () => {
       html: `
       <div style="text-align: left;">
         <!-- Start of formatted content -->
-        <p>The cost of each query depends both on the amount of input tokens you give the bot as well as the number of output tokens that it gives back.</p>
-        <br></br>
-        <p><strong>Important:</strong> The input tokens account for not just the most recent question, but the entire chat history of the current conversation. As the conversation lengthens, the cost for a query increases. To keep queries less expensive, consider starting a new chat session and asking a fresh question.</p>
+        <p>The price per query is determined not only by the number of words in the current question, but by the number of words from the entire conversation history (plus the number words provided in the response).</p>
+        <br>
+        <p>Put simply, long conversations make queries more costly, so start new chats for cheaper queries.</p>
         <!--End of formatted content-->
       </div>`,
       icon: 'question',
@@ -189,7 +189,7 @@ export const ChatbarSettings = () => {
 />
 
       <SidebarButton
-        text={t('How it Works')}
+        text={t('How it Works / FAQ')}
         icon={<IconQuestion />}
         onClick={() => handleHowItWorks()}
       />

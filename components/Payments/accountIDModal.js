@@ -38,7 +38,7 @@ const accountIDModal = (accountId, fullCreditId) => {
           <table style="border-collapse: separate; border-spacing: 0 10px;">
             <thead>
               <tr>
-                <th style="padding: 0 10px;">Timestamp</th>
+                <th style="padding: 0 10px;">Date</th>
                 <th style="padding: 0 10px;">Input Tokens</th>
                 <th style="padding: 0 10px;">Price (satoshis)</th>
               </tr>

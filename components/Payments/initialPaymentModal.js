@@ -182,7 +182,7 @@ document.getElementById('user-input-field')?.addEventListener('input', debounce(
     } catch (error) {
         console.error('Error updating QR code:', error);
     }
-}, 750));
+}, 250));
         
 
         // Button event listeners

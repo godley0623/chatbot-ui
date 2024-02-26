@@ -1,5 +1,4 @@
 export const models = [
-    { id: "gpt-3.5-turbo", name: "GPT-3.5" }, 
     { id: "gpt-4-1106-preview", name: "GPT-4 Turbo"}
 ]
 
