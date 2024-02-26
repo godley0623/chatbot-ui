@@ -68,7 +68,7 @@ export const ChatbarSettings = () => {
         <!-- Start of formatted content -->
         <p style="font-size: 18px; font-weight: bold;">About PayPerQ</p>
         <br>
-        <p style="font-size: 16px;">PayPerQ is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring the premium tier AI to more people globally.</p>
+        <p style="font-size: 16px;">PayPerQ is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring premium tier AI to more people globally.</p>
         <br>
         <p style="font-size: 18px; font-weight: bold;">How Pricing Works</p>
         <br>
@@ -80,7 +80,7 @@ export const ChatbarSettings = () => {
         <br>
         <p style="font-size: 18px; font-weight: bold;">How do I get Bitcoin Lightning so that I can pay for PayPerQ?</p>
         <br>
-        <p style="font-size: 16px;">There are many ways to get Bitcoin Lightning, but it depends on where you live. One easy way to start earning a small amount of Bitcoin Lightning is by downloading <a href="https://addslice.com/?crew=kKN1n" target="_blank" rel="noopener noreferrer" style="color: #2980b9;">AddSlice</a>. Slice is a browser extension which pays you Bitcoin Lightning in exchange for serving ads to you.</p>
+        <p style="font-size: 16px;">There are many ways to get Bitcoin Lightning, but it depends on where you live so you'll need to do your own research. One easy way to start earning a small amount of Bitcoin Lightning is by downloading <a href="https://addslice.com/?crew=kKN1n" target="_blank" rel="noopener noreferrer" style="color: #2980b9;">AddSlice</a>. Slice is a browser extension which pays you Bitcoin Lightning in exchange for serving ads to you.</p>
         <br>
         <p style="font-size: 18px; font-weight: bold;">About the Creator</p>
         <br>
