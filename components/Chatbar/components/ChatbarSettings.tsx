@@ -62,13 +62,32 @@ export const ChatbarSettings = () => {
   };
   const handleHowItWorks = () => {
     Swal.fire({
-      title: 'How it Works',
+      title: 'How it Works / FAQ',
       html: `
       <div style="text-align: left;">
         <!-- Start of formatted content -->
-        <p>The price per query is determined not only by the number of words in the current question, but by the number of words from the entire conversation history (plus the number words provided in the response).</p>
+        <p style="font-size: 18px; font-weight: bold;">About PayPerQ</p>
         <br>
-        <p>Put simply, long conversations make queries more costly, so start new chats for cheaper queries.</p>
+        <p style="font-size: 16px;">PayPerQ is a pay-per-query Chatbot that leverages the openAI's API and Bitcoin to bring the premium tier AI to more people globally.</p>
+        <br>
+        <p style="font-size: 18px; font-weight: bold;">How Pricing Works</p>
+        <br>
+        <p style="font-size: 16px;">The price for each query is based on the number of input words in the entire chat conversation as well as the number output words that ChatGPT responds back.</p>
+        <br>
+        <p style="font-size: 16px;">Put simply, longer conversations make queries more costly, so start new chats for cheaper queries.</p>
+        <br>
+        <p style="font-size: 16px;">Your usage can be monitored in the Account ID section</p>
+        <br>
+        <p style="font-size: 18px; font-weight: bold;">How do I get Bitcoin Lightning so that I can pay for PayPerQ?</p>
+        <br>
+        <p style="font-size: 16px;">There are many ways to get Bitcoin Lightning, but it depends on where you live. One easy way to start earning a small amount of Bitcoin Lightning is by downloading <a href="https://addslice.com/?crew=kKN1n" target="_blank" rel="noopener noreferrer" style="color: #2980b9;">AddSlice</a>. Slice is a browser extension which pays you Bitcoin Lightning in exchange for serving ads to you.</p>
+        <br>
+        <p style="font-size: 18px; font-weight: bold;">About the Creator</p>
+        <br>
+        <p style="font-size: 16px;">PayPerQ is created by me, <a href="https://twitter.com/MattAhlborg" target="_blank" rel="noopener noreferrer" style="color: #2980b9;">Matt Ahlborg</a>. I want PayPerQ to become the preferred ChatGPT4 experience for all Bitcoin adjacent developers and professionals around the world. Please help me get it there!</p>
+        <br>
+        <p style="font-size: 16px;">What would it take for PayPerQ to become your primary daily GPT interface? Please click the Feedback / Support button on the left and let me know!</p>
+        <br>
         <!--End of formatted content-->
       </div>`,
       icon: 'question',
@@ -194,11 +213,6 @@ export const ChatbarSettings = () => {
         onClick={() => handleHowItWorks()}
       />
 
-      <SidebarButton
-        text={t('About')}
-        icon={<IconAbout />}
-        onClick={() => handleAbout()}
-      />
       <SidebarButton
         text={t('Feedback / Support')}
         icon={<IconExclamationCircle size={18} />}
